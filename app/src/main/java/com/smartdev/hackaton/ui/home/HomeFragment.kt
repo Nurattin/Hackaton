@@ -56,8 +56,7 @@ class HomeFragment : Fragment() {
                 val uiState = viewModel.tours.collectAsStateWithLifecycle()
                 val chips = viewModel.chips.collectAsStateWithLifecycle()
                 val verticalScrollState = rememberLazyListState()
-                val showTopAppBarShadow =
-                    remember { derivedStateOf { verticalScrollState.firstVisibleItemScrollOffset.dp > 20.dp } }
+                val showTopAppBarShadow = remember { derivedStateOf { verticalScrollState.firstVisibleItemScrollOffset.dp > 20.dp } }
                 val animateShadow =
                     animateFloatAsState(targetValue = if (showTopAppBarShadow.value) 50f else 0f)
 
