@@ -40,6 +40,7 @@
 
 
         <ImageView
+            android:id="@+id/expanded_bottomBar"
             android:layout_width="70dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center|top"

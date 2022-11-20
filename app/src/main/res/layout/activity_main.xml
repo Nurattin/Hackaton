@@ -14,20 +14,18 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         app:defaultNavHost="true"
-        app:navGraph="@navigation/navigation"
-        tools:viewBindingIgnore="true" />
+        app:navGraph="@navigation/navigation" />
 
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/nav_view"
         android:layout_width="match_parent"
         app:itemRippleColor="@color/text_color_gra"
-        android:layout_height="40dp"
-        android:elevation="20dp"
+        android:layout_height="wrap_content"
         android:background="@color/white"
-        android:outlineProvider="none"
         app:itemIconTint="@color/text_color_gray"
-        app:labelVisibilityMode="unlabeled"
+        android:focusable="true"
+        app:itemTextColor="@color/text_color_gray"
         app:menu="@menu/bottom_nav_menu" />
 
 </LinearLayout>

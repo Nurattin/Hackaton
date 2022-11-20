@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
@@ -15,12 +16,14 @@ import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
+import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -89,15 +92,26 @@ class MapFragment : Fragment(), DrivingSession.DrivingRouteListener {
 
 
                 Box(
-                    modifier = Modifier.fillMaxSize(),
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(Color.White),
                     contentAlignment = Alignment.Center
                 ) {
-                    CircularProgressIndicator(strokeWidth = 1.dp)
+                    CircularProgressIndicator(
+                        strokeWidth = 1.dp, color = Color(
+                            0xFF76A595
+                        )
+                    )
                 }
             }
 
             error.setContent {
-                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(Color.White),
+                    contentAlignment = Alignment.Center
+                ) {
                     Column(
                         verticalArrangement = Arrangement.spacedBy(12.dp),
                         horizontalAlignment = CenterHorizontally
@@ -145,8 +159,12 @@ class MapFragment : Fragment(), DrivingSession.DrivingRouteListener {
                             Chip(
                                 onClick = { viewModel.changeCategorySelected(item) },
                                 colors = ChipDefaults.chipColors(
-                                    contentColor = if (item.isSelected) Color.White else Color.Black,
-                                    backgroundColor = if (item.isSelected) Color(0xFF76A595) else Color.White
+                                    contentColor = animateColorAsState(targetValue = if (item.isSelected) Color.White else Color.Black).value,
+                                    backgroundColor = animateColorAsState(
+                                        targetValue = if (item.isSelected) Color(
+                                            0xFF76A595
+                                        ) else Color.White
+                                    ).value
                                 ),
                                 shape = RoundedCornerShape(8.dp),
                                 border = BorderStroke(Dp.Hairline, Color.Black.copy(0.1f))
@@ -175,7 +193,9 @@ class MapFragment : Fragment(), DrivingSession.DrivingRouteListener {
                     Text(
                         modifier = Modifier.fillMaxWidth(),
                         text = "Кинотеатр “Октябрь”",
-                        textAlign = TextAlign.Center
+                        textAlign = TextAlign.Center,
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Medium
                     )
                     verticalSpace(height = 16.dp)
                     Row(
@@ -261,7 +281,7 @@ class MapFragment : Fragment(), DrivingSession.DrivingRouteListener {
                                 backgroundColor = Color.White,
                                 contentColor = Color.Black
                             ),
-                            border = BorderStroke(1.dp, Color.Black.copy(0.1f)),
+                            border = BorderStroke(Dp.Hairline, Color.Black.copy(0.1f)),
                             shape = RoundedCornerShape(4.dp)
                         ) {
                             Text(text = "~250р")
@@ -304,17 +324,19 @@ class MapFragment : Fragment(), DrivingSession.DrivingRouteListener {
                                     .height(81.dp)
                                     .width(214.dp),
                                 shape = RoundedCornerShape(12.dp),
-                            ) {
+
+                                ) {
                                 Row(
                                     modifier = Modifier
                                         .fillMaxSize()
-                                        .background(Color.Black.copy(alpha = 0.1f))
+                                        .background(Color.Black.copy(alpha = 0.05f))
                                         .padding(6.dp),
-                                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                                    verticalAlignment = CenterVertically
                                 ) {
                                     AsyncImage(
                                         modifier = Modifier
-                                            .size(32.dp)
+                                            .size(52.dp)
                                             .shadow(10.dp, shape = CircleShape),
                                         contentScale = ContentScale.Crop,
                                         model = "https://i.pinimg.com/originals/25/cf/17/25cf170c0b6463eff6ebe89983c95dbd.jpg",
@@ -346,19 +368,32 @@ class MapFragment : Fragment(), DrivingSession.DrivingRouteListener {
                         fontSize = 10.sp
                     )
                     verticalSpace(height = 32.dp)
+
+                    Text(
+                        text = "Рекомендации",
+                        modifier = Modifier.fillMaxWidth(),
+                        textAlign = TextAlign.Center
+                    )
+                    verticalSpace(height = 8.dp)
+
                     LazyRow(
                         horizontalArrangement = Arrangement.spacedBy(10.dp),
                         contentPadding = PaddingValues(horizontal = 20.dp)
                     ) {
                         items(5) {
-                            AsyncImage(
-                                modifier = Modifier
-                                    .size(120.dp)
-                                    .clip(RoundedCornerShape(14.dp)),
-                                contentScale = ContentScale.Crop,
-                                model = listIntresting.random(),
-                                contentDescription = null
-                            )
+                            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+
+
+                                AsyncImage(
+                                    modifier = Modifier
+                                        .size(120.dp)
+                                        .clip(RoundedCornerShape(14.dp)),
+                                    contentScale = ContentScale.Crop,
+                                    model = listIntresting.random(),
+                                    contentDescription = null
+                                )
+                                Text(text = "Cулакский каньон")
+                            }
                         }
                     }
                     verticalSpace(height = 32.dp)
@@ -368,10 +403,18 @@ class MapFragment : Fragment(), DrivingSession.DrivingRouteListener {
 
         }
 
+
+
         BottomSheetBehavior.from(binding.bottomSheetContainer).apply {
             peekHeight = 200
             state = BottomSheetBehavior.STATE_COLLAPSED
+            binding.expandedBottomBar.setOnClickListener {
+
+                state =
+                    if (state == BottomSheetBehavior.STATE_EXPANDED) BottomSheetBehavior.STATE_COLLAPSED else BottomSheetBehavior.STATE_EXPANDED
+            }
         }
+
         mapObjects = binding.mapview.map.mapObjects.addCollection();
         drivingRouter = DirectionsFactory.getInstance().createDrivingRouter()
         return binding.root

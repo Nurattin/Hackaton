@@ -4,10 +4,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
@@ -22,6 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -56,7 +59,8 @@ class HomeFragment : Fragment() {
                 val uiState = viewModel.tours.collectAsStateWithLifecycle()
                 val chips = viewModel.chips.collectAsStateWithLifecycle()
                 val verticalScrollState = rememberLazyListState()
-                val showTopAppBarShadow = remember { derivedStateOf { verticalScrollState.firstVisibleItemScrollOffset.dp > 20.dp } }
+                val showTopAppBarShadow =
+                    remember { derivedStateOf { verticalScrollState.firstVisibleItemScrollOffset.dp > 20.dp } }
                 val animateShadow =
                     animateFloatAsState(targetValue = if (showTopAppBarShadow.value) 50f else 0f)
 
@@ -86,6 +90,14 @@ class HomeFragment : Fragment() {
                                         .align(Alignment.Center)
                                         .padding(vertical = 13.dp)
                                 )
+                                Icon(
+                                    modifier = Modifier
+                                        .align(Alignment.CenterEnd)
+                                        .padding(end = 16.dp)
+                                    .clickable {  },
+                                    painter = painterResource(id = R.drawable.ic_search),
+                                    contentDescription = null
+                                )
                             }
 
                             LazyRow(
@@ -98,8 +110,12 @@ class HomeFragment : Fragment() {
                                     Chip(
                                         onClick = { viewModel.changeCategorySelected(item) },
                                         colors = ChipDefaults.chipColors(
-                                            contentColor = if (item.isSelected) Color.White else Color.Black,
-                                            backgroundColor = if (item.isSelected) Color(0xFF76A595) else Color.White
+                                            contentColor = animateColorAsState(targetValue = if (item.isSelected) Color.White else Color.Black).value,
+                                            backgroundColor = animateColorAsState(
+                                                targetValue = if (item.isSelected) Color(
+                                                    0xFF76A595
+                                                ) else Color.White
+                                            ).value
                                         ),
                                         shape = RoundedCornerShape(8.dp),
                                         border = BorderStroke(Dp.Hairline, Color.Black.copy(0.1f))
@@ -130,11 +146,15 @@ class HomeFragment : Fragment() {
                                 Box(
                                     modifier = Modifier
                                         .fillMaxWidth()
-                                        .weight(1f),
+                                        .weight(1f)
+                                        .background(Color.White),
                                     contentAlignment = Alignment.Center
-
                                 ) {
-                                    CircularProgressIndicator()
+                                    CircularProgressIndicator(
+                                        strokeWidth = 1.dp, color = Color(
+                                            0xFF76A595
+                                        )
+                                    )
                                 }
                             }
                             is TourUiState.Success -> {
