@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/main_tab_navigation"
+        android:icon="@drawable/ic_baseline_home"
+        android:iconTint="@color/black"
+        android:title="Главная" />
+
+    <item
+        android:id="@+id/card_tab_navigation"
+        android:icon="@drawable/ic_baseline_map"
+        android:iconTint="@color/black"
+        android:title="Места" />
+
+</menu>
