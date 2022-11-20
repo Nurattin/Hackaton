@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.ImageButton
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.smartdev.hackaton.R
@@ -21,13 +22,13 @@ constructor(ctx: Context, attributeSet: AttributeSet? = null, defStyleAttr: Int 
 
     fun setValues(place: Int = 1, isChecked: Boolean, category: String) {
         val imageButton = findViewById<ImageButton>(R.id.imageButton)
-        val place_txt = findViewById<TextView>(R.id.place)
+        val extra = findViewById<ImageView>(R.id.extra)
 
         when (category) {
             "Интересные" -> imageButton.setImageResource(R.drawable.ic_interest)
             "Спорт" -> imageButton.setImageResource(
                 listOf(
-                    R.drawable.ic_share,
+                    R.drawable.ic_sport,
                     R.drawable.ic_sport_variant
                 ).random()
             )
@@ -37,11 +38,10 @@ constructor(ctx: Context, attributeSet: AttributeSet? = null, defStyleAttr: Int 
             "Университет" -> imageButton.setImageResource(R.drawable.ic_university)
             else -> imageButton.setImageResource(R.drawable.marker)
         }
-    }
-
-
-    fun setColor() {
-        val place_txt = findViewById<TextView>(R.id.place)
-        place_txt.text = "asda"
+        val random = (1..10).random()
+        when(random){
+            1 -> extra.setImageResource(R.drawable.ic_extra)
+            2,3,4 -> extra.setImageResource(R.drawable.ic_exta_time)
+        }
     }
 }
