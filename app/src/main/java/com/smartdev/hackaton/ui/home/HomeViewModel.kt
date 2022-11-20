@@ -7,7 +7,6 @@ import com.smartdev.hackaton.data.network_layer.Api
 import com.smartdev.hackaton.data.network_layer.Result
 import com.smartdev.hackaton.data.network_layer.asResult
 import com.smartdev.hackaton.ui.map.Chip
-import com.smartdev.hackaton.ui.map.listCategory
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -26,11 +25,29 @@ class HomeViewModel @Inject constructor(
     val tours = _tours.asStateFlow()
 
 
-    val chips = MutableStateFlow(listCategory)
+    val chips = MutableStateFlow<List<Chip>>(emptyList())
 
 
     init {
         getTours()
+        getCategory()
+    }
+
+    fun getCategory() {
+        viewModelScope.launch {
+            flow { emit(api.getCategory()) }.asResult().collect { result ->
+                when (result) {
+                    is Result.Error -> {}
+                    Result.Loading -> {}
+                    is Result.Success -> {
+                        chips.value = result.data.data.mapIndexed { index, data ->
+                            if (index == 1) Chip(isSelected = true, name = data.name)
+                            else Chip(isSelected = false, name = data.name)
+                        }
+                    }
+                }
+            }
+        }
     }
 
     fun getTours() {

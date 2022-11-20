@@ -1,6 +1,7 @@
 package com.smartdev.hackaton.ui.map
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewModelScope
 import com.smartdev.hackaton.data.model.TourDetail
 import com.smartdev.hackaton.data.network_layer.Api
@@ -21,6 +22,31 @@ class MapViewModel @Inject constructor(
 
     private val _places = MutableStateFlow<MapUiState>(MapUiState.Loading)
     val places = _places.asStateFlow()
+
+
+    val chips = MutableStateFlow<List<Chip>>(emptyList())
+
+
+    init {
+        getCategory()
+    }
+
+    fun getCategory() {
+        viewModelScope.launch {
+            flow { emit(api.getCategoryForPlace()) }.asResult().collect { result ->
+                when (result) {
+                    is Result.Error -> {}
+                    Result.Loading -> {}
+                    is Result.Success -> {
+                        chips.value = result.data.data.mapIndexed { index, data ->
+                            if (index == 1) Chip(isSelected = true, name = data.name)
+                            else Chip(isSelected = false, name = data.name)
+                        }
+                    }
+                }
+            }
+        }
+    }
 
     fun getDetailTour(id: Int) {
         viewModelScope.launch {
@@ -45,6 +71,15 @@ class MapViewModel @Inject constructor(
                 }
         }
     }
+
+    fun changeCategorySelected(category: Chip) {
+        chips.value = chips.value.map {
+            if (it == category) it.copy(isSelected = true) else if (it.isSelected) it.copy(
+                isSelected = false
+            ) else it
+        }
+    }
+
 //    fun changeCategorySelected(category: Chip) {
 //        _mainUiState.update { currentState ->
 //            currentState.copy(

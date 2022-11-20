@@ -1,12 +1,11 @@
 package com.smartdev.hackaton.data.network_layer
 
-import com.smartdev.hackaton.data.model.Place
+import com.smartdev.hackaton.data.model.CategoryDto
 import com.smartdev.hackaton.data.model.TourDetail
 import com.smartdev.hackaton.data.model.Tours
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Path
-import retrofit2.http.Query
 
 interface Api {
     @GET("tour/{id}")
@@ -16,4 +15,11 @@ interface Api {
 
     @POST("tour/list")
     suspend fun getAllTours(): Tours
+
+
+    @GET("tour/get-categories")
+    suspend fun getCategory(): CategoryDto
+
+    @GET("place/get-categories")
+    suspend fun getCategoryForPlace(): CategoryDto
 }

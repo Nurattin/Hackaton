@@ -9,8 +9,8 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import com.smartdev.hackaton.R
 
 class CustomPointer @JvmOverloads
-constructor(ctx: Context, attributeSet: AttributeSet? = null, defStyleAttr: Int = 0)
-    : ConstraintLayout(ctx, attributeSet, defStyleAttr) {
+constructor(ctx: Context, attributeSet: AttributeSet? = null, defStyleAttr: Int = 0) :
+    ConstraintLayout(ctx, attributeSet, defStyleAttr) {
 
     init {
 
@@ -19,18 +19,28 @@ constructor(ctx: Context, attributeSet: AttributeSet? = null, defStyleAttr: Int 
         inflater.inflate(R.layout.custom_pointer, this)
     }
 
-    fun setValues(place: Int = 1, isChecked: Boolean) {
-        val place_txt = findViewById<TextView>(R.id.place)
+    fun setValues(place: Int = 1, isChecked: Boolean, category: String) {
         val imageButton = findViewById<ImageButton>(R.id.imageButton)
+        val place_txt = findViewById<TextView>(R.id.place)
 
-        if (isChecked){
-            imageButton.setImageResource(R.drawable.ic_pointer_check)
+        when (category) {
+            "Интересные" -> imageButton.setImageResource(R.drawable.ic_interest)
+            "Спорт" -> imageButton.setImageResource(
+                listOf(
+                    R.drawable.ic_share,
+                    R.drawable.ic_sport_variant
+                ).random()
+            )
+            "Канпинг" -> imageButton.setImageResource(R.drawable.ic_camp)
+            "Парк" -> imageButton.setImageResource(R.drawable.ic_parck)
+            "Отдых" -> imageButton.setImageResource(R.drawable.ic_relaxation)
+            "Университет" -> imageButton.setImageResource(R.drawable.ic_university)
+            else -> imageButton.setImageResource(R.drawable.marker)
         }
-        place_txt.text = place.toString()
     }
 
 
-    fun setColor(){
+    fun setColor() {
         val place_txt = findViewById<TextView>(R.id.place)
         place_txt.text = "asda"
     }
